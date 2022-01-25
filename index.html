@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/jspsych@7.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.0"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-rdk@1.0.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/jspsych@7.1.2/css/jspsych.css">
+  </head>
+  <body></body>
+  <script>
+    const jsPsych = initJsPsych({
+      on_finish: () => {
+        jsPsych.data.displayData();
+      }
+    });
+
+    const circle_trial = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: () => {
+        return `<div style="width:50vh; height: 50vh; border-radius: 50vh; background-color: ${jsPsych.timelineVariable('color')};"></div>`;
+      },
+      post_trial_gap: 500,
+      data: {
+        color: jsPsych.timelineVariable('color')
+      },
+      on_start: () =>{
+        fetch(`http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable('trigger_value')}`);
+      }
+    }
+
+    const p300_block = {
+      timeline: [circle_trial],
+      timeline_variables: [
+        {color: 'blue', trigger_value: 1},
+        {color: 'orange', trigger_value: 2},
+        {color: 'lightblue', trigger_value: 3}
+      ],
+      sample: {
+        size: 5,
+        type: 'with-replacement',
+        weights: [1,1,1]
+      }
+    }
+
+    jsPsych.run([trial])
+  </script>
+</html>
