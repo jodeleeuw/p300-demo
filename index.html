@@ -59,18 +59,18 @@
         task: "circle",
       },
       on_start: () => {
-        fetch(
-          `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
-            "trigger_value"
-          )}`
-        );
+        // fetch(
+        //   `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
+        //     "trigger_value"
+        //   )}`
+        // );
       },
       on_load: () => {
-        fetch(
-          `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
-            "trigger_value"
-          )}`
-        );
+        // fetch(
+        //   `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
+        //     "trigger_value"
+        //   )}`
+        // );
       },
     };
 
@@ -88,7 +88,7 @@
         { color: "#ffaa00", trigger_value: 2 },
         { color: "#8000ff", trigger_value: 3 },
       ],
-      repetitions: 25,
+      repetitions: 2,
       randomize_order: true,
     };
 
@@ -116,7 +116,7 @@
     const end = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `<p>The experiment is complete. Thanks!</p>`,
-      choices: jsPsych.NO_KEYS,
+      choices: "NO_KEYS",
       on_start: () => {
         const id = jsPsych.data.get().filter({ task: "subject_id" }).values()[0]
           .response.Q0;
@@ -125,6 +125,7 @@
     };
 
     jsPsych.run([
+      subject_id,
       instructions,
       p300_block,
       count_break,
