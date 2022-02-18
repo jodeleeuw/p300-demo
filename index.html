@@ -38,7 +38,7 @@
         <p>A series of colored circles will appear. Most of the circles will be blue, but some will be orange and some will be purple.</p>
         <p>Your task is to count the total number of orange and purple circles.</p>
         <p>You do not need to keep track of the number of orange and purple separately. For example, if you have seen 3 purple circles and 1 orange circle you only need to report the number 4.</p>
-        <p>You'll complete 4 rounds, and each round will take about 3 minutes.</p>
+        <p>You'll complete 3 rounds, and each round will take about 3 minutes.</p>
         <p>When you are ready for the first round, press the spacebar.</p>
         </div>`,
       choices: [" "],
@@ -58,19 +58,12 @@
         color: jsPsych.timelineVariable("color"),
         task: "circle",
       },
-      on_start: () => {
-        // fetch(
-        //   `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
-        //     "trigger_value"
-        //   )}`
-        // );
-      },
       on_load: () => {
-        // fetch(
-        //   `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
-        //     "trigger_value"
-        //   )}`
-        // );
+        fetch(
+          `http://127.0.0.1:8000/trigger/tcp/${jsPsych.timelineVariable(
+            "trigger_value"
+          )}`
+        );
       },
     };
 
@@ -88,7 +81,7 @@
         { color: "#ffaa00", trigger_value: 2 },
         { color: "#8000ff", trigger_value: 3 },
       ],
-      repetitions: 2,
+      repetitions: 25,
       randomize_order: true,
     };
 
@@ -127,9 +120,6 @@
     jsPsych.run([
       subject_id,
       instructions,
-      p300_block,
-      count_break,
-      begin_next_round,
       p300_block,
       count_break,
       begin_next_round,
