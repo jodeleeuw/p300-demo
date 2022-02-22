@@ -1,0 +1,19 @@
+---
+title: "P300 Experiment"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(eegUtils)
+```
+
+
+```{r}
+eeg_test <- import_raw("data/eeg/subject-02-eeg.edf")
+
+head <- edfReader::readEdfHeader("data/eeg/subject-03-eeg.bdf")
+signals <- edfReader::readEdfSignals(head)
+```
