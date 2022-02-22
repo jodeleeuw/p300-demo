@@ -7,13 +7,68 @@ output: html_notebook
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(purrr)
 library(eegUtils)
+library(signals)
 ```
 
+# Load data
 
 ```{r}
-eeg_test <- import_raw("data/eeg/subject-02-eeg.edf")
+read_eeg_file_tidy <- function(file) {
+  head <- edfReader::readEdfHeader(file)
+  signals <- edfReader::readEdfSignals(head, signals="Ordinary")
+  
+  data <- map_df(signals, "signal")
+  data$sample <- 1:nrow(data)
+  
+  events <- data %>% select(sample, TRIGGER) %>% filter(TRIGGER < 256)
+  
+  data$`Packet Counter` <- NULL
+  data$ACC21 <- NULL
+  data$ACC22 <- NULL
+  data$ACC23 <- NULL
+  data$`ExG 1` <- NULL
+  data$TRIGGER <- NULL
+  
+  tidy_data <- pivot_longer(data, 1:20, names_to = "electrode", values_to = "v") %>% select(sample, electrode, v)
+  
+  return(list(signals=tidy_data, events=events))
+}
 
-head <- edfReader::readEdfHeader("data/eeg/subject-03-eeg.bdf")
-signals <- edfReader::readEdfSignals(head)
+subject_01 <- read_eeg_file_tidy('data/subject-01-eeg.bdf')
+
 ```
+
+# Average Rereference
+
+```{r}
+average_rereference <- function(data){
+  df <- data$signals
+  df <- df %>% 
+    group_by(sample) %>% 
+    mutate(v = v - mean(v)) %>%
+    ungroup()
+  data$signals <- df
+  return(data)
+}
+
+s01rr <- average_rereference(subject_01)
+```
+
+
+# Filter
+
+
+
+
+
+# Segment
+
+# Artifact Rejection
+
+# Baseline Correction
+
+# Grand Average ERPs
+
+# Statistical Analysis; ANOVAs

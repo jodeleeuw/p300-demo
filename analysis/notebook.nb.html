@@ -1762,58 +1762,50 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkodGlkeXIpXG5saWJyYXJ5KGVlZ1V0aWxzKVxuYGBgIn0= -->
-<pre class="r"><code>library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(eegUtils)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZWRmUmVhZGVyOjpyZWFkRWRmU2lnbmFscyhoZWFkKVxuXG5gYGAifQ== -->
-<pre class="r"><code>edfReader::readEdfSignals(head)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzaWduYWxzKVxuXG5gYGAifQ== -->
+<pre class="r"><code>library(signals)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiU3RhcnQgdGltZSAgICAgICAgICAgIDogMjAyMi0wMS0zMSAxMDo1MjoyNiAgIFxuT3JkaW5hcnkgc2lnbmFsczogXG4gQ29udGludW91cyByZWNvcmRpbmcgOiBUUlVFICBcbiBSZWNvcmRlZCBwZXJpb2QgICAgICA6IDgwNiBzZWMgPSAwMDoxMzoyNiBoOm06cyBcbiBQZXJpb2QgcmVhZCAgICAgICAgICA6IHdob2xlIHJlY29yZGluZyAgXG4gU2lnbmFscyBcbiBSICAgICAgbmFtZSAgdHJhbnNkdWNlciBzYW1wbGVSYXRlIHByZUZpbHRlciAgICAgc2FtcGxlcyBcbiBzaWduYWwgICAgICAgICAgICAgICAgICAgICAgICAvc2VjICAgICAgICAgICAgICAgICAgICAgICBcbiAxICAgICAgRjcgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyICAgICAgRnAxICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAzICAgICAgRnAyICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA0ICAgICAgRjggICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA1ICAgICAgRjMgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA2ICAgICAgRnogICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA3ICAgICAgRjQgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA4ICAgICAgQzMgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiA5ICAgICAgQ3ogICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxMCAgICAgUDggICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxMSAgICAgUDcgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxMiAgICAgUHogICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxMyAgICAgUDQgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxNCAgICAgVDMgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxNSAgICAgUDMgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxNiAgICAgTzEgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxNyAgICAgTzIgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxOCAgICAgQzQgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAxOSAgICAgVDQgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyMCAgICAgQTIgICAgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyMSAgICAgRXhHIDEgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyMiAgICAgQUNDMjEgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyMyAgICAgQUNDMjIgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbiAyNCAgICAgQUNDMjMgQ2hhbm5lbCAgICAgICAgICAgNTAwIEhQOkRDOyBMUDoxMjUgIDQwMzAwMCBcbi4uLiBhbmQgMiBtb3JlXG4ifQ== -->
-<pre><code>Start time            : 2022-01-31 10:52:26   
-Ordinary signals: 
- Continuous recording : TRUE  
- Recorded period      : 806 sec = 00:13:26 h:m:s 
- Period read          : whole recording  
- Signals 
- R      name  transducer sampleRate preFilter     samples 
- signal                        /sec                       
- 1      F7    Channel           500 HP:DC; LP:125  403000 
- 2      Fp1   Channel           500 HP:DC; LP:125  403000 
- 3      Fp2   Channel           500 HP:DC; LP:125  403000 
- 4      F8    Channel           500 HP:DC; LP:125  403000 
- 5      F3    Channel           500 HP:DC; LP:125  403000 
- 6      Fz    Channel           500 HP:DC; LP:125  403000 
- 7      F4    Channel           500 HP:DC; LP:125  403000 
- 8      C3    Channel           500 HP:DC; LP:125  403000 
- 9      Cz    Channel           500 HP:DC; LP:125  403000 
- 10     P8    Channel           500 HP:DC; LP:125  403000 
- 11     P7    Channel           500 HP:DC; LP:125  403000 
- 12     Pz    Channel           500 HP:DC; LP:125  403000 
- 13     P4    Channel           500 HP:DC; LP:125  403000 
- 14     T3    Channel           500 HP:DC; LP:125  403000 
- 15     P3    Channel           500 HP:DC; LP:125  403000 
- 16     O1    Channel           500 HP:DC; LP:125  403000 
- 17     O2    Channel           500 HP:DC; LP:125  403000 
- 18     C4    Channel           500 HP:DC; LP:125  403000 
- 19     T4    Channel           500 HP:DC; LP:125  403000 
- 20     A2    Channel           500 HP:DC; LP:125  403000 
- 21     ExG 1 Channel           500 HP:DC; LP:125  403000 
- 22     ACC21 Channel           500 HP:DC; LP:125  403000 
- 23     ACC22 Channel           500 HP:DC; LP:125  403000 
- 24     ACC23 Channel           500 HP:DC; LP:125  403000 
-... and 2 more</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gbGlicmFyeShzaWduYWxzKSA6IHRoZXJlIGlzIG5vIHBhY2thZ2UgY2FsbGVkIOKAmHNpZ25hbHPigJlcbiJ9 -->
+<pre><code>Error in library(signals) : there is no package called ‘signals’</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="average-rereference" class="section level1">
+<h1>Average Rereference</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="filter" class="section level1">
+<h1>Filter</h1>
+</div>
+<div id="segment" class="section level1">
+<h1>Segment</h1>
+</div>
+<div id="artifact-rejection" class="section level1">
+<h1>Artifact Rejection</h1>
+</div>
+<div id="baseline-correction" class="section level1">
+<h1>Baseline Correction</h1>
+</div>
+<div id="grand-average-erps" class="section level1">
+<h1>Grand Average ERPs</h1>
+</div>
+<div id="statistical-analysis-anovas" class="section level1">
+<h1>Statistical Analysis; ANOVAs</h1>
+<!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUDMwMCBFeHBlcmltZW50IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7cn0KbGlicmFyeShkcGx5cikKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KHRpZHlyKQpsaWJyYXJ5KGVlZ1V0aWxzKQpgYGAKCgpgYGB7cn0KZWVnX3Rlc3QgPC0gaW1wb3J0X3JhdygiZGF0YS9lZWcvc3ViamVjdC0wMi1lZWcuZWRmIikKCmhlYWQgPC0gZWRmUmVhZGVyOjpyZWFkRWRmSGVhZGVyKCJkYXRhL2VlZy9zdWJqZWN0LTAzLWVlZy5iZGYiKQpzaWduYWxzIDwtIGVkZlJlYWRlcjo6cmVhZEVkZlNpZ25hbHMoaGVhZCkKYGBg</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUDMwMCBFeHBlcmltZW50IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpgYGB7cn0KbGlicmFyeShkcGx5cikKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KHRpZHlyKQpsaWJyYXJ5KHB1cnJyKQpsaWJyYXJ5KGVlZ1V0aWxzKQpsaWJyYXJ5KHNpZ25hbHMpCmBgYAoKIyBMb2FkIGRhdGEKCmBgYHtyfQpyZWFkX2VlZ19maWxlX3RpZHkgPC0gZnVuY3Rpb24oZmlsZSkgewogIGhlYWQgPC0gZWRmUmVhZGVyOjpyZWFkRWRmSGVhZGVyKGZpbGUpCiAgc2lnbmFscyA8LSBlZGZSZWFkZXI6OnJlYWRFZGZTaWduYWxzKGhlYWQsIHNpZ25hbHM9Ik9yZGluYXJ5IikKICAKICBkYXRhIDwtIG1hcF9kZihzaWduYWxzLCAic2lnbmFsIikKICBkYXRhJHNhbXBsZSA8LSAxOm5yb3coZGF0YSkKICAKICBldmVudHMgPC0gZGF0YSAlPiUgc2VsZWN0KHNhbXBsZSwgVFJJR0dFUikgJT4lIGZpbHRlcihUUklHR0VSIDwgMjU2KQogIAogIGRhdGEkYFBhY2tldCBDb3VudGVyYCA8LSBOVUxMCiAgZGF0YSRBQ0MyMSA8LSBOVUxMCiAgZGF0YSRBQ0MyMiA8LSBOVUxMCiAgZGF0YSRBQ0MyMyA8LSBOVUxMCiAgZGF0YSRgRXhHIDFgIDwtIE5VTEwKICBkYXRhJFRSSUdHRVIgPC0gTlVMTAogIAogIHRpZHlfZGF0YSA8LSBwaXZvdF9sb25nZXIoZGF0YSwgMToyMCwgbmFtZXNfdG8gPSAiZWxlY3Ryb2RlIiwgdmFsdWVzX3RvID0gInYiKSAlPiUgc2VsZWN0KHNhbXBsZSwgZWxlY3Ryb2RlLCB2KQogIAogIHJldHVybihsaXN0KHNpZ25hbHM9dGlkeV9kYXRhLCBldmVudHM9ZXZlbnRzKSkKfQoKc3ViamVjdF8wMSA8LSByZWFkX2VlZ19maWxlX3RpZHkoJ2RhdGEvc3ViamVjdC0wMS1lZWcuYmRmJykKCmBgYAoKIyBBdmVyYWdlIFJlcmVmZXJlbmNlCgpgYGB7cn0KYXZlcmFnZV9yZXJlZmVyZW5jZSA8LSBmdW5jdGlvbihkYXRhKXsKICBkZiA8LSBkYXRhJHNpZ25hbHMKICBkZiA8LSBkZiAlPiUgCiAgICBncm91cF9ieShzYW1wbGUpICU+JSAKICAgIG11dGF0ZSh2ID0gdiAtIG1lYW4odikpICU+JQogICAgdW5ncm91cCgpCiAgZGF0YSRzaWduYWxzIDwtIGRmCiAgcmV0dXJuKGRhdGEpCn0KCnMwMXJyIDwtIGF2ZXJhZ2VfcmVyZWZlcmVuY2Uoc3ViamVjdF8wMSkKYGBgCgoKIyBGaWx0ZXIKCgoKCgojIFNlZ21lbnQKCiMgQXJ0aWZhY3QgUmVqZWN0aW9uCgojIEJhc2VsaW5lIENvcnJlY3Rpb24KCiMgR3JhbmQgQXZlcmFnZSBFUlBzCgojIFN0YXRpc3RpY2FsIEFuYWx5c2lzOyBBTk9WQXM=</div>
 
 
 
