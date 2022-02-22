@@ -59,7 +59,14 @@ s01rr <- average_rereference(subject_01)
 
 # Filter
 
+1-40Hz bandpass
 
+```{r}
+low_edge <- 1
+high_edge <- 40
+sampling_rate <- 500
+filter_order <- 3 * (sampling_rate / low_edge)
+```
 
 
 
