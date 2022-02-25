@@ -1,81 +1,168 @@
 ---
 title: "P300 Experiment"
-output: html_notebook
+output:
+  html_notebook:
+    theme: paper
+    fig_caption: yes
+  html_document:
+    df_print: paged
 ---
 
-```{r}
+```{r Load R Libraries, include=FALSE}
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-library(purrr)
-library(eegUtils)
-library(signals)
+library(jsonlite)
+library(ez)
 ```
 
-# Load data
+# Results
 
-```{r}
-read_eeg_file_tidy <- function(file) {
-  head <- edfReader::readEdfHeader(file)
-  signals <- edfReader::readEdfSignals(head, signals="Ordinary")
-  
-  data <- map_df(signals, "signal")
-  data$sample <- 1:nrow(data)
-  
-  events <- data %>% select(sample, TRIGGER) %>% filter(TRIGGER < 256)
-  
-  data$`Packet Counter` <- NULL
-  data$ACC21 <- NULL
-  data$ACC22 <- NULL
-  data$ACC23 <- NULL
-  data$`ExG 1` <- NULL
-  data$TRIGGER <- NULL
-  
-  tidy_data <- pivot_longer(data, 1:20, names_to = "electrode", values_to = "v") %>% select(sample, electrode, v)
-  
-  return(list(signals=tidy_data, events=events))
-}
-
-subject_01 <- read_eeg_file_tidy('data/subject-01-eeg.bdf')
-
+```{r Load Behavioral Data Files, include=FALSE}
+behavioral.files <- list.files("data", pattern=".json", full.names = TRUE)
+behavioral.data <- lapply(behavioral.files, function(filepath){
+  df <- fromJSON(filepath) %>%
+    mutate(subject = substr(filepath, 14, 15)) %>%
+    return()
+  }) %>% bind_rows()
 ```
 
-# Average Rereference
+## Participants
 
-```{r}
-average_rereference <- function(data){
-  df <- data$signals
-  df <- df %>% 
-    group_by(sample) %>% 
-    mutate(v = v - mean(v)) %>%
-    ungroup()
-  data$signals <- df
-  return(data)
-}
+```{r Count the number of subjects, include=FALSE}
+n.subjects <- behavioral.data %>%
+  pull(subject) %>%
+  unique() %>%
+  length()
+```
 
-s01rr <- average_rereference(subject_01)
+`r n.subjects` undergraduate students at Vassar College completed the experiment.
+
+## Behavioral
+
+```{r Calculate behavioral error for each subject, include=FALSE}
+behavioral.error <- behavioral.data %>%
+  filter(task == "count") %>%
+  select(subject, task, response) %>%
+  unnest(cols=response) %>%
+  mutate(error= abs(as.numeric(response)-50))
+```
+
+Participants were asked to count the number of oddball stimuli and report the total at the end of each block. Each block contained 50 oddballs. On the whole, participants were very accurate. The largest error within an individual block across all participants was `r behavioral.error %>% pull(error) %>% max()`. The average error per block was `r behavioral.error %>% pull(error) %>% mean() %>% signif(3)`, *SD*=`r behavioral.error %>% pull(error) %>% sd() %>% signif(3)`.
+
+## EEG
+
+```{r Load EEG Data Files, include=FALSE}
+eeg.data <- readRDS("data/preprocessed/epochs.rds")
+```
+
+```{r Fix column types in EEG data, include=FALSE}
+eeg.data <- eeg.data %>% mutate(event_type = factor(event_type))
+```
+
+### Segments
+
+```{r, include=FALSE}
+good.segment.count <- eeg.data %>%
+  group_by(subject, event_id, event_type) %>%
+  summarize(good_segment = all(good_segment)) %>%
+  group_by(subject, event_type, good_segment) %>%
+  summarize(N=n()) %>%
+  filter(good_segment == TRUE) %>%
+  select(subject, event_type, N)
+
+good.segments.by.type <- good.segment.count %>%
+  group_by(event_type) %>%
+  summarize(M=mean(N), SD=sd(N))
+```
+
+Across the three blocks of the experiment, there were a total of 600 blue circle events, 75 orange circle events, and 75 purple circle events. On average, subjects had `r good.segments.by.type %>% filter(event_type == 1) %>% pull(M)` good segments for blue circles (*SD* = `r good.segments.by.type %>% filter(event_type == 1) %>% pull(SD) %>% signif(3)`), `r good.segments.by.type %>% filter(event_type == 2) %>% pull(M)` good segments for orange circles (*SD* = `r good.segments.by.type %>% filter(event_type == 2) %>% pull(SD) %>% signif(3)`), and `r good.segments.by.type %>% filter(event_type == 3) %>% pull(M)` good segments for purple circles (*SD* = `r good.segments.by.type %>% filter(event_type == 3) %>% pull(SD) %>% signif(3)`). The minimum number of good segments in any condition across all subjects was `r good.segment.count %>% pull(N) %>% min()`.
+
+### ERPs
+
+The grand average waveforms show that the P300 is present across central and parietal electrodes (Fig. 1).
+
+```{r Calculate Subject Averages, include=FALSE}
+subject.erps <- eeg.data %>%
+  filter(good_segment == TRUE) %>%
+  group_by(subject, electrode, t, event_type) %>%
+  summarize(m.subject = mean(v))
+```
+
+```{r Calculate Grand Averages, message=FALSE, warning=FALSE, include=FALSE}
+grand.average.waveforms <- subject.erps %>%
+  group_by(electrode, t, event_type) %>%
+  summarize(m = mean(m.subject), se = sd(m.subject)/sqrt(n()))
+```
+
+```{r Grand Average Figure, echo=FALSE, fig.cap='Figure 1: Grand Average ERPs for all electrodes.'}
+ggplot(grand.average.waveforms, aes(x=t, y=m, ymin=m-se, ymax=m+se, color=event_type, fill=event_type)) +
+  geom_hline(yintercept=0) +
+  geom_vline(xintercept=0) +
+  geom_ribbon(alpha=0.3, color=NA)+
+  geom_line() +
+  scale_color_manual(name="Stimulus", values=c("#0000ff", "#ffaa00", "#8000ff"), labels=c("Blue", "Orange", "Purple"))+
+  scale_fill_manual(name="Stimulus",values=c("#0000ff", "#ffaa00", "#8000ff"), labels=c("Blue", "Orange", "Purple"))+
+  labs(x="Time (ms)", y="Microvolts") +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank()) + 
+  facet_wrap(.~electrode)
 ```
 
 
-# Filter
 
-1-40Hz bandpass
-
-```{r}
-low_edge <- 1
-high_edge <- 40
-sampling_rate <- 500
-filter_order <- 3 * (sampling_rate / low_edge)
+```{r Calculate Difference Waves, include=FALSE}
+difference.waves <- subject.erps %>%
+  pivot_wider(id_cols=c(subject, electrode, t), names_from=event_type, values_from=m.subject) %>%
+  mutate(d2 = `2` - `1`, d3 = `3` - `1`) %>%
+  select(electrode, t, d2, d3) %>%
+  pivot_longer(c("d2", "d3"), names_to="event_type", values_to="d")
 ```
 
+```{r Calculate Grand Average Difference Waves, include=FALSE}
+grand.average.difference.waves <- difference.waves %>%
+  group_by(event_type, electrode, t) %>%
+  summarize(m = mean(d), se= sd(d)/sqrt(n()))
+```
 
+We computed difference waves by subtracting the ERP for the standard stimulus (blue circle) from the ERPs for the oddballs. The grand average difference waves for each electrode are shown in Figure 2. 
 
-# Segment
+```{r Grand Average Difference Wave Figure, echo=FALSE}
+ggplot(grand.average.difference.waves, aes(x=t, y=m, ymin=m-se, ymax=m+se, color=event_type, fill=event_type)) +
+  geom_hline(yintercept=0) +
+  geom_vline(xintercept=0) +
+  geom_ribbon(alpha=0.3, color=NA)+
+  geom_line() +
+  scale_color_manual(name="Stimulus", values=c("#ffaa00", "#8000ff"), labels=c("Orange", "Purple"))+
+  scale_fill_manual(name="Stimulus",values=c("#ffaa00", "#8000ff"), labels=c("Orange", "Purple"))+
+  labs(x="Time (ms)", y="Microvolts") +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank()) + 
+  facet_wrap(.~electrode)
+```
 
-# Artifact Rejection
+```{r Compute average P300 amplitude in time window, include=FALSE}
+time.window <- 300:500
+electrodes <- c("Pz", "Cz", "P3", "P4")
 
-# Baseline Correction
+subject.p300.average <- subject.erps %>%
+  filter(t %in% time.window, electrode %in% electrodes) %>%
+  group_by(subject, event_type) %>%
+  summarize(m = mean(m.subject))
+```
 
-# Grand Average ERPs
+```{r Compute P300 ANOVA, include=FALSE}
+p300.anova <- ezANOVA(subject.p300.average, dv=m, wid=subject, within=event_type)
+```
 
-# Statistical Analysis; ANOVAs
+```{r P300 ANOVA table, echo=FALSE}
+p300.anova$ANOVA
+```
+
+```{r Compute t-test for orange v. purple, include=FALSE}
+p300.t.test <- t.test(m ~ event_type, data = subject.p300.average %>% filter(event_type %in% c(2,3)), paired=T)
+```
+
+```{r Print P300 t-test, echo=FALSE}
+print(p300.t.test)
+```
